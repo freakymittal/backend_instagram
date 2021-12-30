@@ -1,9 +1,8 @@
 const mongoose=require('mongoose');
 const joi=require('joi');
 const bcrypt=require('bcrypt');
-
 const userschema=mongoose.Schema({
-    name:{
+    username:{
         type:String,
         required:true,
         unique: true
@@ -40,3 +39,4 @@ const userschema=mongoose.Schema({
     },
 
 });
+module.exports=mongoose.model("User",userschema);
