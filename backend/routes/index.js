@@ -14,10 +14,16 @@ router.post('/login',(req,res)=>{
         return res.status(404).json({'error':'Some of the fields are incomplete'});
     }
     User.findOne({email:email}).then(user=>{
-        bcrypt.compare(password,user.password).then(matched=>{
-            const token=jwt.sign({_id:user.id},"InsTa_CloNe124626232gs");
-            res.json({"token":token})
-        })
+        if(user.email_verified == true) {
+            bcrypt.compare(password, user.password).then(matched => {
+                const token = jwt.sign({_id: user.id}, "InsTa_CloNe124626232gs");
+                return res.json({"token": token})
+
+            })
+        }
+        else{
+         return res.json({'message':'Verify your Email first'})
+        }
     })
 });
 module.exports = router;
