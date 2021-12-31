@@ -3,9 +3,9 @@ const User = require("../Schema/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var router = express.Router();
-
+const {tokenPublicKey,expiresIn}=require('../env')
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/ping', function(req, res, next) {
     res.send('Welcome! This is Instagram clone');
 });
 router.post('/login',(req,res)=>{
@@ -16,7 +16,9 @@ router.post('/login',(req,res)=>{
     User.findOne({email:email}).then(user=>{
         if(user.email_verified == true) {
             bcrypt.compare(password, user.password).then(matched => {
-                const token = jwt.sign({_id: user.id}, "InsTa_CloNe124626232gs");
+                const token = jwt.sign({_id: user.id}, tokenPublicKey,{
+                    expiresIn:expiresIn
+                });
                 return res.json({"token": token})
             })
         }

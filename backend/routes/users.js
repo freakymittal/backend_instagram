@@ -7,20 +7,20 @@ const User=require('../Schema/users')
 const auth=require('../Auth/auth')
 const {transporter}=require('../config/mail')
 const nodemailer = require('nodemailer')
-
+const {forgotPasswordPublicKey,email_user,emailPublicKey,tokenPublicKey,expiresIn}=require('../env')
 
 //for getting data
 router.post('/forgot-password',async (req, res) => {
     let {email, newPassword} = await req.body
     console.log("New Password",newPassword)
-    let emailVerification = await jwt.sign({email:email}, 'emailNotMade@110011',{
-        expiresIn: '1d'
+    let emailVerification = await jwt.sign({email:email}, forgotPasswordPublicKey,{
+        expiresIn: expiresIn
     })
     console.log(emailVerification);
     await User.findOne({email: email}).then(user => {
         if (user) {
             var mailOptions = {
-                from: 'bosepriyangshu2001@gmail.com',
+                from: email_user,
                 to: email,
                 subject: 'Verify Your Mail',
                 html: `<h1><h2>${user.username}!</h2> Verify it's you</h1>
@@ -44,7 +44,7 @@ router.get('/forgot-password',async (req, res) => {
     let token = await req.query.token
     let newPass = await req.query.password
     console.log(newPass)
-    await jwt.verify(token, "emailNotMade@110011", async (err, payload) => {
+    await jwt.verify(token, forgotPasswordPublicKey, async (err, payload) => {
         if (err) {
             return res.status(403).json({'error': 'Unauthorized Entry'})
         } else {
@@ -73,12 +73,12 @@ router.post('/signup',(req,res)=>{
              const user = new User({
                  username: username, email: email, password: password, hash: hashed,
              })
-             let emailVerification = jwt.sign({_id: user.id}, 'notAGreatIdea@120202',{
-                 expiresIn:'30m'
+             let emailVerification = jwt.sign({_id: user.id}, emailPublicKey,{
+                 expiresIn:expiresIn
              });
              user.save().then(async user => {
                  const mailOpts = {
-                     from: 'bosepriyangshu2001@gmail.com',
+                     from: email_user,
                      to: email,
                      subject: 'Verify Your Mail',
                      html: `<h1><h2>${username}!</h2> Thanks For registering</h1>
@@ -100,7 +100,6 @@ router.post('/signup',(req,res)=>{
              })
 
          });
-
     }
     else{
       return res.status(404).json({'error':'Email already present'});
@@ -110,7 +109,7 @@ router.post('/signup',(req,res)=>{
 
 router.get('/email_verify',(req,res)=>{
     let token = req.query.token;
-    jwt.verify(token, "notAGreatIdea@120202", async (err, payload) => {
+    jwt.verify(token, emailPublicKey, async (err, payload) => {
         if (err) {
             return res.status(403).json({'error': 'Unauthorized Entry'})
         } else {
@@ -120,7 +119,6 @@ router.get('/email_verify',(req,res)=>{
                 email_verified: true
             })
             res.status(200).send(`Congratulations you have verifed`)
-
         }
     })
     } )
@@ -135,7 +133,7 @@ router.get('/', auth,async function (req, res, next) {
     User.find({
         $or: [
             {email: {$regex: searchPatt}},
-            {phone: {$regex: searchPatt}}
+            {username: {$regex: searchPatt}}
         ]
     },).limit(100).then(user=>{
         if(user){
@@ -148,13 +146,8 @@ router.get('/', auth,async function (req, res, next) {
 });
 router.put('/:id',auth,async (req, res) => {
     const {username, email, password} = await req.body
-    console.log(username)
-    console.log(password)
-    console.log(email)
     await bcrypt.hash(password, 16,async (err, hashed) => {
-        await User.findOneAndUpdate({
-                username: req.user.username
-            },
+        await User.findByIdAndUpdate(req.params._id,
             {
                 email: email,
                 username: username,

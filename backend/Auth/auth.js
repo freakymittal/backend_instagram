@@ -1,13 +1,14 @@
 const jwt=require('jsonwebtoken')
 const mongoose=require('mongoose')
 const User=require('../Schema/users')
+const {tokenPublicKey}=require('../env')
 module.exports=async (req,res,next)=>{
      const {authorization}=req.headers
     if(!authorization){
         return res.status(400).json({'error':'You have to be logged in'})
     }
     const token=authorization.replace("Bearer ","")
-    await jwt.verify(token,"InsTa_CloNe124626232gs",(err,payload)=>{
+    await jwt.verify(token,tokenPublicKey,(err,payload)=>{
         if(err){
             return res.status(403).json({'error':'You have to be logged in'})
         }
