@@ -6,7 +6,7 @@ var logger = require('morgan');
 const passport=require('passport')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const {db}=require('./env')
+const {db}=require('./Controllers/config/env')
 const app = express();
 
 const mongoose = require("mongoose");

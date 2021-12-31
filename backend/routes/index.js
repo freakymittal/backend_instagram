@@ -3,7 +3,7 @@ const User = require("../Schema/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var router = express.Router();
-const {tokenPublicKey,expiresIn}=require('../env')
+const {tokenPublicKey,expiresIn}=require('../Controllers/config/env')
 /* GET home page. */
 router.get('/ping', function(req, res, next) {
     res.send('Welcome! This is Instagram clone');

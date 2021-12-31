@@ -4,10 +4,10 @@ const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 const mongoose=require('mongoose')
 const User=require('../Schema/users')
-const auth=require('../Auth/auth')
-const {transporter}=require('../config/mail')
+const auth=require('../Controllers/Auth/auth')
+const {transporter}=require('../Controllers/config/mail')
 const nodemailer = require('nodemailer')
-const {forgotPasswordPublicKey,email_user,emailPublicKey,tokenPublicKey,expiresIn}=require('../env')
+const {forgotPasswordPublicKey,email_user,emailPublicKey,tokenPublicKey,expiresIn}=require('../Controllers/config/env')
 
 //for getting data
 router.post('/forgot-password',async (req, res) => {
