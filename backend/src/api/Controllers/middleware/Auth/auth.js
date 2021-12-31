@@ -1,6 +1,6 @@
 const jwt=require('jsonwebtoken')
 const mongoose=require('mongoose')
-const User=require('../../../../Schema/users')
+const User=require('../../../../models/users')
 const {tokenPublicKey}=require('../../config/env')
 module.exports=async (req,res,next)=>{
      const {authorization}=req.headers
