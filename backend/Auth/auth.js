@@ -4,7 +4,7 @@ const User=require('../Schema/users')
 module.exports=async (req,res,next)=>{
      const {authorization}=req.headers
     if(!authorization){
-        return res.status(300).json({'error':'You have to be logged in'})
+        return res.status(400).json({'error':'You have to be logged in'})
     }
     const token=authorization.replace("Bearer ","")
     await jwt.verify(token,"InsTa_CloNe124626232gs",(err,payload)=>{

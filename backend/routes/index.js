@@ -18,7 +18,6 @@ router.post('/login',(req,res)=>{
             bcrypt.compare(password, user.password).then(matched => {
                 const token = jwt.sign({_id: user.id}, "InsTa_CloNe124626232gs");
                 return res.json({"token": token})
-
             })
         }
         else{
