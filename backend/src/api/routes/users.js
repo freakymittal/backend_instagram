@@ -3,8 +3,8 @@ var router = express.Router();
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 const mongoose=require('mongoose')
-const User=require('../Schema/users')
-const auth=require('../Controllers/Auth/auth')
+const User=require('../../Schema/users')
+const auth=require('../Controllers/middleware/Auth/auth')
 const {transporter}=require('../Controllers/config/mail')
 const nodemailer = require('nodemailer')
 const {forgotPasswordPublicKey,email_user,emailPublicKey,tokenPublicKey,expiresIn}=require('../Controllers/config/env')
@@ -92,13 +92,10 @@ router.post('/signup',(req,res)=>{
                          } else {
                              console.log('Verification mail send to the mail')
                              return res.status(200).json({"Message": "Successfully Verified!!", "User": this.user})
-
                          }
                      }
                  )
-
              })
-
          });
     }
     else{

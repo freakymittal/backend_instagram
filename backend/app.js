@@ -4,9 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const passport=require('passport')
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const {db}=require('./Controllers/config/env')
+const indexRouter = require('./src/api/routes/index');
+const usersRouter = require('./src/api/routes/users');
+const {db}=require('./src/api/Controllers/config/env')
 const app = express();
 
 const mongoose = require("mongoose");
