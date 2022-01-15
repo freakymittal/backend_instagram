@@ -9,6 +9,8 @@ const usersRouter = require('./src/api/routes/users');
 const {db}=require('./src/api/Controllers/config/env')
 const app = express();
 
+const DB = null;
+
 const mongoose = require("mongoose");
 mongoose.connect(db,{useNewUrlParser: true, useUnifiedTopology: true})
     .then(()=>{
@@ -19,6 +21,11 @@ mongoose.connect(db,{useNewUrlParser: true, useUnifiedTopology: true})
     });
 app.use(logger('dev'));
 app.use(express.json());
+
+app.use((req, res, next) => {
+   req.db = DB;
+    next();
+});
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
